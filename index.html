@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>neighborhood map</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0">
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<div id="container">
+		<h2>Major Cities in India</h2>
+		<input id="filter-text" type="text" placeholder="Where you want to go...?" data-bind="textInput: typedText">
+		<h3>You are looking for: <span data-bind="text: typedText"></span></h3>
+
+		<ul data-bind="foreach: placesList">
+			<li data-bind="text: title, click: $parent.placeClicked"></li>
+		</ul>
+
+		<hr>
+
+	</div>
+
+	<div id="map"></div>
+	<script src="js/knockout-3.4.1.js"></script>
+	<script src="js/script.js" ></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMsLfFuQTcS4FkyK9Qoih4qNdM_udSqv8&v=3&callback=initMap"></script>
+</body>
+</html>
