@@ -9,15 +9,10 @@ body {
 
 h1 {
   text-align: center;
-  padding-bottom: 0px;
-}
-
-h2 {
-  padding-bottom: 0px;
 }
 
 input {
-  width: 80%;
+  width: 85%;
 }
  
 ul {
@@ -48,4 +43,9 @@ li {
   height: 100%;
 }
 
+@media screen and (max-width: 549px) {
+  #container {
+  font-size: 0.8em;
+}
+}
      

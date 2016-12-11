@@ -144,13 +144,6 @@ function filteredMap() {
         }
        }
 
-       self.placeClicked = function(place) {
-          populateInfoWindow(place.marker, largeInfowindow);
-          getFlickrImage(place);
-          getWiki(place);
-       };
-
-
         function getFlickrImage(place) {
           var query = place.title;
 
@@ -199,4 +192,10 @@ function filteredMap() {
 
     return false;
   }
+
+       self.placeClicked = function(place) {
+          populateInfoWindow(place.marker, largeInfowindow);
+          getFlickrImage(place);
+          getWiki(place);
+       };
 };
