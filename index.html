@@ -10,7 +10,7 @@
 	<div id="container">
 		<h1>Major Cities in India</h1>
 		<input id="filter-text" type="text" placeholder="Where do  want to go...?" data-bind="textInput: typedText">
-		<h3>You are looking for: <span data-bind="text: typedText"></span></h3>
+		<h2>You are looking for: <span data-bind="text: typedText"></span></h2>
 
 		<ul data-bind="foreach: placesList">
 			<li data-bind="text: title, click: $parent.placeClicked"></li>
@@ -18,8 +18,12 @@
 
 		<hr>
 
-		<div id="photo"></div>
-
+		<div>
+		<h2>Wikipedia Links</h2>
+		<ul data-bind="foreach: wikiLinks">
+			<li data-bind="html: $data"></li>
+		</ul>
+		</div>
 
 	</div>
 

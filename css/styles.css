@@ -4,11 +4,16 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: blue;
+  background-color: black;
 }
 
 h1 {
   text-align: center;
+  padding-bottom: 0px;
+}
+
+h2 {
+  padding-bottom: 0px;
 }
 
 input {
@@ -22,7 +27,7 @@ ul {
 }
 
 li {
-  padding-bottom: 10px;
+  padding-bottom: 4px;
 }
 
 #container {

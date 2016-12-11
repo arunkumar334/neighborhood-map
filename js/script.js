@@ -17,8 +17,8 @@ var map;
 function initMap() {
         // Constructor creates a new map - only center and zoom are required.
         map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 20.0028039, lng: 78.0227952},
-          zoom: 5,
+          center: {lat: 26.0028039, lng: 78.0227952},
+          zoom: 4,
         });
         ko.applyBindings(new viewModel());
 }
@@ -27,6 +27,7 @@ var viewModel = function() {
   var self = this;
   self.typedText = ko.observable('');
   self.places = ko.observableArray(locations);
+  self.wikiLinks = ko.observableArray();
 
   var largeInfowindow = new google.maps.InfoWindow();
 
@@ -91,6 +92,7 @@ function stringStartsWith(string, startsWith) {
             id: place
           });
            marker.addListener('click', function() {
+            getWiki(place);
             getFlickrImage(place);
             populateInfoWindow(this, largeInfowindow);
           });
@@ -113,6 +115,7 @@ function filteredMap() {
             id: place
           });
            marker.addListener('click', function() {
+            getWiki(place);
             getFlickrImage(place);
             populateInfoWindow(this, largeInfowindow);
           });
@@ -127,10 +130,15 @@ function filteredMap() {
         // Check to make sure the infowindow is not already opened on self marker.
         if (infowindow.marker != marker) {
           infowindow.marker = marker;
-          infowindow.setContent('');
+          infowindow.setContent('<div>' + marker.title + '</div>');
             infowindow.open(map, marker);
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+                marker.setAnimation(null);
+            },500);
           // Make sure the marker property is cleared if the infowindow is closed.
           infowindow.addListener('closeclick',function(){
+            marker.setAnimation(null);
             infowindow.setMarker(null);
           });
         }
@@ -139,22 +147,56 @@ function filteredMap() {
        self.placeClicked = function(place) {
           populateInfoWindow(place.marker, largeInfowindow);
           getFlickrImage(place);
+          getWiki(place);
        };
+
 
         function getFlickrImage(place) {
           var query = place.title;
 
-         var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=' + query + '&tagmode=any&format=json&jsoncallback=?';
+         var url = 'https://api.flickr.com/services/feeds/photos_public.gne?tags=' + query + '&tagmode=any&format=json&jsoncallback=?';
               
                 $.getJSON(url, function(data) {
                     console.log(data);
                     var imageUrl = data.items[0].media.m;
                 
                         largeInfowindow.setContent('<div>' + query + '</div><img src = "' + imageUrl + '">');
-                        $('#photo').append('<img src = "' + imageUrl + '">');
                     // Fallback for failed request to get an image
                 }).fail(function() {
                     largeInfowindow.setContent('<div>' + query + '</div><div>No Flickr Image is Found </div>');
                 });
        }
+
+
+       self.getWikiLinks = ko.computed(function() {
+        return self.wikiLinks();
+    });
+
+        function getWiki(place) {
+        self.wikiLinks([]);
+        var wiki_query = place.title;
+       var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + wiki_query + '&format=json&callback=wikiCallback';
+    var wikiRequestTimeout = setTimeout(function(){
+        $('#wiki').text("failed to get wikipedia resources");
+    }, 6000);
+
+    $.ajax({
+        url: wikiUrl,
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function( response ) {
+            var linksList = response[1];
+
+            for (var i = 0; i < 5; i++) {
+                var linksStr = linksList[i];
+                var url = 'http://en.wikipedia.org/wiki/' + linksStr;
+                self.wikiLinks.push('<li><a href="' + url + '">' + linksStr + '</a></li>');
+            };
+
+            clearTimeout(wikiRequestTimeout);
+        }
+    });
+
+    return false;
+  }
 };
