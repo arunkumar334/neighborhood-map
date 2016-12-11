@@ -175,7 +175,7 @@ function filteredMap() {
         function getWiki(place) {
         self.wikiLinks([]);
         var wiki_query = place.title;
-       var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + wiki_query + '&format=json&callback=wikiCallback';
+       var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + wiki_query + '&format=json&callback=wikiCallback';
     var wikiRequestTimeout = setTimeout(function(){
         $('#wiki').text("failed to get wikipedia resources");
     }, 6000);
