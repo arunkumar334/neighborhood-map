@@ -8,8 +8,8 @@
 </head>
 <body>
 	<div id="container">
-		<h2>Major Cities in India</h2>
-		<input id="filter-text" type="text" placeholder="Where you want to go...?" data-bind="textInput: typedText">
+		<h1>Major Cities in India</h1>
+		<input id="filter-text" type="text" placeholder="Where do  want to go...?" data-bind="textInput: typedText">
 		<h3>You are looking for: <span data-bind="text: typedText"></span></h3>
 
 		<ul data-bind="foreach: placesList">
@@ -18,9 +18,13 @@
 
 		<hr>
 
+		<div id="photo"></div>
+
+
 	</div>
 
 	<div id="map"></div>
+	<script src="js/jquery.min.js"></script>
 	<script src="js/knockout-3.4.1.js"></script>
 	<script src="js/script.js" ></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMsLfFuQTcS4FkyK9Qoih4qNdM_udSqv8&v=3&callback=initMap"></script>

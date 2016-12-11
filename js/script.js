@@ -24,14 +24,15 @@ function initMap() {
 }
 
 var viewModel = function() {
-  
-  this.typedText = ko.observable('');
-  this.places = ko.observableArray(locations);
+  var self = this;
+  self.typedText = ko.observable('');
+  self.places = ko.observableArray(locations);
 
   var largeInfowindow = new google.maps.InfoWindow();
 
-this.populateMap = ko.computed(function() {
-        var searchText = this.typedText().toLowerCase();
+self.populateMap = ko.computed(function() {
+  var searchText = self.typedText().toLowerCase();
+
         if (!searchText) {
             return fullyPopulate();
         } else {
@@ -47,19 +48,19 @@ function stringStartsWith(string, startsWith) {
     return string.substring(0, startsWith.length) === startsWith;
   }
 
-   this.typedText = ko.observable('');
+   self.typedText = ko.observable('');
     //A ko.computed for the filtering of the list and the markers
-    this.placesList = ko.computed(function(place) {
-    var search = this.typedText().toLowerCase();
+    self.placesList = ko.computed(function(place) {
+    var search = self.typedText().toLowerCase();
     //If there is nothing in the filter, return the full list and all markers are visible
     if (!search) {
-      this.places().forEach(function(place) {
+      self.places().forEach(function(place) {
           place.marker.setVisible(true);
         });
-      return this.places();
+      return self.places();
     //If a search is entered, compare search data to place names and show only list items and markers that match the search value
       } else {
-        return ko.utils.arrayFilter(this.places(), function(place) {
+        return ko.utils.arrayFilter(self.places(), function(place) {
           var filter = stringStartsWith(place.title.toLowerCase(), search);
           //To show markers that match the search value and return list items that match the search value
            if (filter) {
@@ -73,11 +74,11 @@ function stringStartsWith(string, startsWith) {
             }
         });
       }
-    }, this);
+    }, self);
 
 
   function fullyPopulate() {
-  this.places().forEach(function(place) {
+  self.places().forEach(function(place) {
           // Get the position from the location array.
           var position = place.location;
           var title = place.title;
@@ -90,15 +91,16 @@ function stringStartsWith(string, startsWith) {
             id: place
           });
            marker.addListener('click', function() {
+            getFlickrImage(place);
             populateInfoWindow(this, largeInfowindow);
           });
           // Push the marker to our array of markers.
           place.marker = marker;
-    });
+    })
   }
 
 function filteredMap() {
-  this.places().forEach(function(place) {
+  self.places().forEach(function(place) {
           // Get the position from the location array.
           var position = place.location;
           var title = place.title;
@@ -111,21 +113,22 @@ function filteredMap() {
             id: place
           });
            marker.addListener('click', function() {
+            getFlickrImage(place);
             populateInfoWindow(this, largeInfowindow);
           });
           // Push the marker to our array of markers.
-          this.placesList.push(marker);
+          self.placesList.push(marker);
           place.marker = marker;
-    });
+    })
 }
 
 
     function populateInfoWindow(marker, infowindow) {
-        // Check to make sure the infowindow is not already opened on this marker.
+        // Check to make sure the infowindow is not already opened on self marker.
         if (infowindow.marker != marker) {
           infowindow.marker = marker;
-          infowindow.setContent('<div>' + marker.title + '</div>');
-          infowindow.open(map, marker);
+          infowindow.setContent('');
+            infowindow.open(map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
           infowindow.addListener('closeclick',function(){
             infowindow.setMarker(null);
@@ -133,9 +136,25 @@ function filteredMap() {
         }
        }
 
-       this.placeClicked = function(place) {
-          populateInfoWindow(place, largeInfowindow);
+       self.placeClicked = function(place) {
+          populateInfoWindow(place.marker, largeInfowindow);
+          getFlickrImage(place);
        };
 
+        function getFlickrImage(place) {
+          var query = place.title;
 
+         var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=' + query + '&tagmode=any&format=json&jsoncallback=?';
+              
+                $.getJSON(url, function(data) {
+                    console.log(data);
+                    var imageUrl = data.items[0].media.m;
+                
+                        largeInfowindow.setContent('<div>' + query + '</div><img src = "' + imageUrl + '">');
+                        $('#photo').append('<img src = "' + imageUrl + '">');
+                    // Fallback for failed request to get an image
+                }).fail(function() {
+                    largeInfowindow.setContent('<div>' + query + '</div><div>No Flickr Image is Found </div>');
+                });
+       }
 };
