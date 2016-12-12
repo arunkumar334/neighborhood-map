@@ -45,7 +45,11 @@ li {
 
 @media screen and (max-width: 549px) {
   #container {
+  width: 30%;
   font-size: 0.8em;
+}
+#map {
+  width: 70%;
 }
 }
      
