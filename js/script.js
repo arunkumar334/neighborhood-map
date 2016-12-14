@@ -167,7 +167,7 @@ function filteredMap() {
        var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + wiki_query + '&format=json&callback=wikiCallback';
     var wikiRequestTimeout = setTimeout(function(){     //fallback function in case of failure
         $('#wiki').text("failed to get wikipedia resources");
-    }, 6000);
+    }, 5000);
 
     $.ajax({
         url: wikiUrl,
@@ -197,3 +197,7 @@ function filteredMap() {
           getWiki(place);
        };
 };
+
+function errorMsg() {
+  alert("problem loading google map");
+}

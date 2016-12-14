@@ -20,6 +20,7 @@
 
 		<div>
 		<h2>Wikipedia Links</h2>
+		<h4 id="wiki"></h4>
 		<ul data-bind="foreach: wikiLinks">
 			<li data-bind="html: $data"></li>
 		</ul>
@@ -31,6 +32,6 @@
 	<script src="js/jquery.min.js"></script>
 	<script src="js/knockout-3.4.1.js"></script>
 	<script src="js/script.js" ></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMsLfFuQTcS4FkyK9Qoih4qNdM_udSqv8&v=3&callback=initMap"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMsLfFuQTcS4FkyK9Qoih4qNdM_udSqv8&v=3&callback=initMap" onerror="errorMsg()"></script>
 </body>
 </html>
